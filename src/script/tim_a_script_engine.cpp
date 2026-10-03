@@ -2,6 +2,7 @@
 
 #include "tim_a_script_engine_p.h"
 
+#include <algorithm>
 #include <cassert>
 
 
@@ -42,16 +43,24 @@ tim::a_terminal *tim::a_script_engine::terminal() const
 }
 
 /**
- * Возвращает список автодополнений для префикса. Реализация по
- * умолчанию — пустой список; наследники (tim::tcl) могут
- * переопределить.
+ * Возвращает отсортированный список автодополнений для префикса:
+ * ключевые слова и функции движка, начинающиеся с \a prefix. Те же
+ * множества использует /help, так что список команд один на всё.
  *
  * \param prefix Префикс для поиска.
- * \return Список имён, начинающихся с prefix; пустой по умолчанию.
+ * \return Подходящие имена по алфавиту.
  */
 std::vector<std::string> tim::a_script_engine::complete(const std::string &prefix) const
 {
-    (void) prefix;
+    std::vector<std::string> res;
 
-    return {};
+    for (const auto &set: { keywords(), functions() })
+        for (const std::string &name: set)
+            if (name.compare(0, prefix.size(), prefix) == 0)
+                res.push_back(name);
+
+    std::sort(res.begin(), res.end());
+    res.erase(std::unique(res.begin(), res.end()), res.end());
+
+    return res;
 }

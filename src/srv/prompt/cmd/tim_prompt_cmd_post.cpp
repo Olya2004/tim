@@ -91,5 +91,7 @@ void tim::prompt::register_post_cmds(lil_t lil)
 {
     assert(lil);
 
-    TIM_TCL_REGISTER(lil, react);
+    TIM_TCL_REGISTER_HELP(lil, react, "[weight]",
+                          "React to the last post you saw."_en,
+                          "Отреагировать на последнее увиденное сообщение."_ru);
 }

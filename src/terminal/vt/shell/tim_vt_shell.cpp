@@ -39,6 +39,9 @@ tim::vt_shell::vt_shell(tim::vt *term, tim::a_script_engine *engine)
     _d->_ledit->set_prompt(tim::vt::colorized(_d->_engine->prompt(),
                                               term->theme().colors.at(tim::terminal_color_index::prompt)));
     _d->_ledit->history_load(_d->_history_path);
+    // [Tab] дополняет строку целиком: ответ complete() заменяет её.
+    _d->_ledit->set_completer([this](const std::string &line)
+                              { return complete(line); });
 
     term->protocol()->write_str(tim::p::vt_shell::welcome_banner());
 
@@ -179,6 +182,12 @@ bool tim::vt_shell::write(const char *data, std::size_t size)
 
 
 // Protected
+/** \return Скриптовый движок, исполняющий команды этого интерпретатора. */
+tim::a_script_engine *tim::vt_shell::engine() const
+{
+    return _d->_engine;
+}
+
 /**
  * Решает, считать ли введённую строку командой для engine или чем-то
  * ещё (наследник может перехватить и испустить свой сигнал).
@@ -193,6 +202,20 @@ bool tim::vt_shell::accept_command(const std::string &line, std::string &command
 {
     command = line;
     return true;
+}
+
+
+/**
+ * Варианты автодополнения для [Tab]. Каждый вариант — полная замена
+ * введённой строки. По умолчанию строка целиком считается началом
+ * имени команды движка.
+ *
+ * \param line Текущее содержимое строки ввода.
+ * \return Варианты по алфавиту; пусто — дополнять нечем.
+ */
+std::vector<std::string> tim::vt_shell::complete(const std::string &line) const
+{
+    return engine()->complete(line);
 }
 
 

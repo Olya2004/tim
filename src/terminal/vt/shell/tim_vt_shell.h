@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 #include "tim_pimpl.h"
 
@@ -47,7 +48,11 @@ public:
 
 protected:
 
+    tim::a_script_engine *engine() const;
+
     virtual bool accept_command(const std::string &line, std::string &command);
+
+    virtual std::vector<std::string> complete(const std::string &line) const;
 
 private:
 

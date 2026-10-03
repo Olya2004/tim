@@ -248,29 +248,6 @@ std::size_t tim::tcl::error_pos() const
     return _d->_error_pos;
 }
 
-/**
- * Возвращает список имён LIL-функций, начинающихся с prefix. Использует
- * lil_names для генерации списка.
- *
- * \param prefix Префикс для автодополнения.
- * \return Список имён LIL-функций, начинающихся с \a prefix.
- */
-std::vector<std::string> tim::tcl::complete(const std::string &prefix) const
-{
-    if (prefix.empty())
-        return {};
-
-    std::vector<std::string> res;
-
-    lil_value_t r = lil_names(_d->_lil, prefix.c_str());
-    lil_list_t names = lil_subst_to_list(_d->_lil, r);
-    lil_free_value(r);
-    for (std::size_t i = 0; i < lil_list_size(names); ++i)
-        res.emplace_back(lil_to_string(lil_list_get(names, i)));
-    lil_free_list(names);
-    return res;
-}
-
 /** \return Зарезервированные ключевые слова (для LIL — пустое множество). */
 std::unordered_set<std::string> tim::tcl::keywords() const
 {

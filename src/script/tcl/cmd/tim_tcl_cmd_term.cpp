@@ -137,7 +137,13 @@ void tim::tcl_add_term(lil_t lil)
 {
     assert(lil);
 
-    TIM_TCL_REGISTER(lil, clear);
-    TIM_TCL_REGISTER(lil, puts);
-    TIM_TCL_REGISTER(lil, palette256);
+    TIM_TCL_REGISTER_HELP(lil, clear, "",
+                          "Clear the terminal."_en,
+                          "Очистить терминал."_ru);
+    TIM_TCL_REGISTER_HELP(lil, puts, "[-nonewline] <string>",
+                          "Print a string to the terminal."_en,
+                          "Вывести строку в терминал."_ru);
+    TIM_TCL_REGISTER_HELP(lil, palette256, "",
+                          "Show the terminal's 256-colour palette."_en,
+                          "Показать 256-цветную палитру терминала."_ru);
 }

@@ -48,6 +48,8 @@ protected:
 
     bool accept_command(const std::string &line, std::string &command) override;
 
+    std::vector<std::string> complete(const std::string &line) const override;
+
 private:
 
     /** PIMPL: сигналы и состояние интерпретатора. */

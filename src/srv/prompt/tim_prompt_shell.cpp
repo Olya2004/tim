@@ -3,6 +3,7 @@
 #include "tim_prompt_shell_p.h"
 
 #include "tim_a_protocol.h"
+#include "tim_a_script_engine.h"
 #include "tim_config.h"
 #include "tim_string_tools.h"
 #include "tim_vt.h"
@@ -148,4 +149,46 @@ bool tim::prompt_shell::accept_command(const std::string &line, std::string &com
     command = line.substr(1);
 
     return true;
+}
+
+/**
+ * Автодополнение команд чата: "/na<Tab>" → "/name", а после "/help "
+ * дополняется и имя команды-аргумента. Обычный текст сообщения не
+ * дополняется. Имена берёт engine (functions()).
+ *
+ * \param line Текущая строка ввода.
+ * \return Полные варианты строки с префиксом '/'.
+ */
+std::vector<std::string> tim::prompt_shell::complete(const std::string &line) const
+{
+    if (line.empty()
+            || line[0] != tim::COMMAND_PREFIX)
+        return {};
+
+    const std::string body = line.substr(1);
+    const std::size_t sp = body.find(' ');
+
+    std::string head = std::string(1, tim::COMMAND_PREFIX);
+    std::string word = body;
+    if (sp != std::string::npos)
+    {
+        // Аргумент есть только у /help, и он тоже имя команды.
+        if (body.compare(0, sp, "help") != 0)
+            return {};
+        head += body.substr(0, sp + 1);
+        word = body.substr(sp + 1);
+        if (!word.empty()
+                && word[0] == tim::COMMAND_PREFIX)
+        {
+            head += tim::COMMAND_PREFIX;
+            word.erase(0, 1);
+        }
+        if (word.find(' ') != std::string::npos)
+            return {};
+    }
+
+    std::vector<std::string> res = engine()->complete(word);
+    for (std::string &name: res)
+        name.insert(0, head);
+    return res;
 }

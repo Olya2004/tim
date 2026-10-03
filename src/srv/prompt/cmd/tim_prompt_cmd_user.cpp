@@ -352,11 +352,11 @@ void tim::prompt::register_user_cmds(lil_t lil)
 {
     assert(lil);
 
-    TIM_TCL_REGISTER(lil, setnick);
-    TIM_TCL_REGISTER(lil, seticon);
-    TIM_TCL_REGISTER(lil, setmotto);
-    TIM_TCL_REGISTER(lil, subscribe);
-    TIM_TCL_REGISTER(lil, unsubscribe);
-    TIM_TCL_REGISTER(lil, subscriptions);
-    TIM_TCL_REGISTER(lil, subscribers);
+    TIM_TCL_REGISTER_HELP(lil, setnick, "<nick>", "Change your nickname."_en, "Сменить свой ник."_ru);
+    TIM_TCL_REGISTER_HELP(lil, seticon, "<icon>", "Change your icon."_en, "Сменить свою иконку."_ru);
+    TIM_TCL_REGISTER_HELP(lil, setmotto, "<motto>", "Change your motto."_en, "Сменить свой девиз."_ru);
+    TIM_TCL_REGISTER_HELP(lil, subscribe, "<publisher-uuid>", "Follow a user."_en, "Подписаться на пользователя."_ru);
+    TIM_TCL_REGISTER_HELP(lil, unsubscribe, "<publisher-uuid>", "Stop following a user."_en, "Отписаться от пользователя."_ru);
+    TIM_TCL_REGISTER_HELP(lil, subscriptions, "", "List users you follow."_en, "Список пользователей, на которых вы подписаны."_ru);
+    TIM_TCL_REGISTER_HELP(lil, subscribers, "", "List users who follow you."_en, "Список ваших подписчиков."_ru);
 }

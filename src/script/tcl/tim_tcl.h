@@ -63,8 +63,6 @@ public:
 
     std::size_t error_pos() const override;
 
-    std::vector<std::string> complete(const std::string &prefix) const override;
-
     std::unordered_set<std::string> keywords() const override;
 
     std::unordered_set<std::string> functions() const override;
